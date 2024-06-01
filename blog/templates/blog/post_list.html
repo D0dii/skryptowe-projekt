@@ -1,0 +1,9 @@
+{% block content %}
+<h1>Blog Posts</h1>
+{% for post in posts %}
+<div>
+  <h2><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h2>
+  <p>{{ post.content|truncatewords:30 }}</p>
+  <p><a href="{% url 'post_detail' post.pk %}">Read more</a></p>
+</div>
+{% endfor %} {% endblock %}

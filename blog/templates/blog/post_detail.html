@@ -1,0 +1,24 @@
+{% block content %}
+<h1>{{ post.title }}</h1>
+<p>{{ post.content }}</p>
+<p>by {{ post.author.username }} on {{ post.created_at }}</p>
+<p>
+  {{ post.total_likes }} Likes
+  <a href="{% url 'add_like' post.pk %}">{% if user in post.likes.all %}Unlike{% else %}Like{% endif %}</a>
+</p>
+
+<h2>Comments</h2>
+{% for comment in post.comments.all %}
+<div>
+  <p>{{ comment.content }}</p>
+  <p>by {{ comment.author.username }} on {{ comment.created_at }}</p>
+</div>
+{% endfor %} {% if user.is_authenticated %}
+<h3>Add a Comment</h3>
+<form method="post">
+  {% csrf_token %} {{ comment_form.as_p }}
+  <button type="submit">Add Comment</button>
+</form>
+{% else %}
+<p>You must be logged in to comment.</p>
+{% endif %} {% endblock %}
