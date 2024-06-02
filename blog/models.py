@@ -18,6 +18,7 @@ class Post(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
     likes = models.ManyToManyField(User, related_name='post_likes', blank=True)
+    tags = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
         return self.title
@@ -30,6 +31,7 @@ class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField()
     created_at = models.DateTimeField(default=timezone.now)
+    
 
     def __str__(self):
         return f'Comment by {self.author.username} on {self.post.title}'

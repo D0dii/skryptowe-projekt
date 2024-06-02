@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['title', 'content']
+        fields = ['title', 'tags', 'content']
 
 class CommentForm(forms.ModelForm):
     class Meta:
@@ -21,3 +21,6 @@ class SignupForm(UserCreationForm):
 class LoginForm(forms.Form):
     username = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput)
+
+class SearchForm(forms.Form):
+    query = forms.CharField(label='Search', max_length=100, required=False)

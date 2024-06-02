@@ -1,5 +1,5 @@
-{% extends "base_generic.html" %} {% block title %}All Posts{% endblock %} {% block content %}
-<h2>All Posts</h2>
+{% extends "base_generic.html" %} {% block title %}Following Posts{% endblock %} {% block content %}
+<h2>Posts from Following Users</h2>
 
 <!-- Search Form -->
 <form method="get">
@@ -10,7 +10,7 @@
 <!-- Search Results -->
 {% if query %}
 <h3>Results for "{{ query }}"</h3>
-<a href="{% url 'index' %}" class="button">Clear Filters</a>
+<a href="{% url 'following_posts' %}" class="button">Clear Filters</a>
 {% endif %}
 
 <!-- Display Posts -->

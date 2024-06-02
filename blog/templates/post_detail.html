@@ -1,5 +1,9 @@
 {% extends "base_generic.html" %} {% block content %}
 <h1>{{ post.title }}</h1>
+<p><strong>Tags:</strong> {{ post.tags }}</p>
+{% if request.user == post.author %}
+<p><a href="{% url 'post_edit' pk=post.pk %}">Edit</a></p>
+{% endif %}
 <p>{{ post.content }}</p>
 <p>by {{ post.author.username }} on {{ post.created_at }}</p>
 <p>
@@ -10,6 +14,9 @@
 <h2>Comments</h2>
 {% for comment in post.comments.all %}
 <div>
+  {% if request.user == comment.author %}
+  <p><a href="{% url 'comment_edit' pk=comment.pk comment_pk=comment.pk %}">Edit</a></p>
+  {% endif %}
   <p>{{ comment.content }}</p>
   <p>by {{ comment.author.username }} on {{ comment.created_at }}</p>
 </div>
