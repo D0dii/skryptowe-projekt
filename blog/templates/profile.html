@@ -1,0 +1,26 @@
+{% extends "base_generic.html" %} {% block content %}
+<h2>Profile: {{ user.username }}</h2>
+
+<h3>Followers</h3>
+<ul>
+  {% for follower in followers %}
+  <li>{{ follower.user.username }}</li>
+  {% endfor %}
+</ul>
+
+<h3>Following</h3>
+<ul>
+  {% for follow in follows %}
+  <li>{{ follow.user.username }}</li>
+  {% endfor %}
+</ul>
+
+{% if user != request.user %}
+<form action="{% url 'follow_unfollow_user' username=user.username %}" method="post">
+  {% csrf_token %} {% if user.profile in request.user.profile.follows.all %}
+  <button type="submit">Unfollow</button>
+  {% else %}
+  <button type="submit">Follow</button>
+  {% endif %}
+</form>
+{% endif %} {% endblock %}
