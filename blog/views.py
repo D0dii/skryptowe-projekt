@@ -1,12 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Post, Comment, Profile
-from .forms import PostForm, CommentForm, SearchForm
+from .forms import PostForm, CommentForm, ProfileEditForm, SearchForm
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout 
-from .forms import SignupForm, LoginForm
+from .forms import SignupForm, LoginForm, UserEditForm
 from django.db.models import Q
 
 def index(request):
@@ -49,7 +49,7 @@ def post_new(request):
             return redirect('post_detail', pk=post.pk)
     else:
         form = PostForm()
-    return render(request, 'post_edit.html', {'form': form})
+    return render(request, 'post_edit.html', {'form': form, 'mode': 'new'})
 
 @login_required
 def post_edit(request, pk):
@@ -63,7 +63,7 @@ def post_edit(request, pk):
             return redirect('post_detail', pk=post.pk)
     else:
         form = PostForm(instance=post)
-    return render(request, 'post_edit.html', {'form': form})
+    return render(request, 'post_edit.html', {'form': form, 'mode': 'edit'})
 
 @login_required
 def post_delete(request, pk):
@@ -93,6 +93,20 @@ def user_signup(request):
     else:
         form = SignupForm()
     return render(request, 'signup.html', {'form': form})
+
+@login_required
+def edit_profile(request):
+    if request.method == 'POST':
+        user_form = UserEditForm(instance=request.user, data=request.POST)
+        profile_form = ProfileEditForm(instance=request.user.profile, data=request.POST, files=request.FILES)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            return redirect('profile', username=request.user.username)
+    else:
+        user_form = UserEditForm(instance=request.user)
+        profile_form = ProfileEditForm(instance=request.user.profile)
+    return render(request, 'edit_profile.html', {'user_form': user_form, 'profile_form': profile_form})
 
 # login page
 def user_login(request):

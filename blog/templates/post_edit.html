@@ -1,7 +1,14 @@
-{% extends "base_generic.html" %} {% block content %}
+{% extends "base_generic.html" %} {% block content %} {% if mode == 'new' %}
 <h1>New post</h1>
-<form method="post">
-  {% csrf_token %} {{ form.as_p }}
-  <button type="submit">Save</button>
+{% else %}
+<h1>Edit post</h1>
+{% endif %}
+
+<form method="post" class="basic-form">
+  {% csrf_token %} {{ form.as_p }} {% if mode == 'new' %}
+  <button type="submit" class="submit-btn btn-wide">Create New Post</button>
+  {% else %}
+  <button type="submit" class="submit-btn btn-wide">Update Post</button>
+  {% endif %}
 </form>
 {% endblock %}

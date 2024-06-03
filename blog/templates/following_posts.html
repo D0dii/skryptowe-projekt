@@ -1,27 +1,42 @@
-{% extends "base_generic.html" %} {% block title %}Following Posts{% endblock %} {% block content %}
-<h2>Posts from Following Users</h2>
+{% extends "base_generic.html" %} {% block title %}All Posts{% endblock %} {% block content %}
+<h1>Posts of observed</h1>
 
 <!-- Search Form -->
-<form method="get">
-  {{ form.as_p }}
-  <button type="submit">Search</button>
-</form>
+<div class="form-container">
+  <form method="get" class="text-center">
+    {{ form.as_p }}
+    <button type="submit" class="submit-btn">Search</button>
+  </form>
 
-<!-- Search Results -->
-{% if query %}
-<h3>Results for "{{ query }}"</h3>
-<a href="{% url 'following_posts' %}" class="button">Clear Filters</a>
-{% endif %}
+  <!-- Search Results -->
+  {% if query %}
+  <h2>Results for "{{ query }}"</h2>
+  <a href="{% url 'following_posts' %}" class="submit-btn">Clear Filters</a>
+  {% endif %}
+</div>
 
 <!-- Display Posts -->
 {% for post in results %}
-<div>
-  <h3><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a></h3>
-  <p>By {{ post.author.username }} on {{ post.created_at }}</p>
-  {% if request.user == post.author %}
-  <p><a href="{% url 'post_edit' pk=post.pk %}">Edit</a></p>
-  {% endif %}
-  <p>{{ post.content|truncatewords:30 }}</p>
-  <p><strong>Tags:</strong> {{ post.tags }}</p>
+<div class="post-card">
+  <div class="">
+    <div class="post-header">
+      <h2 class="bold"><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a></h2>
+      {% if request.user == post.author %}
+      <a href="{% url 'post_edit' pk=post.pk %}"><i class="fa-solid fa-pencil" title="Edit post"></i></a>
+      {% endif %}
+    </div>
+    <div>
+      <div class="flex-col">
+        <span class="small">Tags: {{ post.tags }}</span>
+        <span class="italic small"
+          >By <a href="{% url 'profile' username=post.author.username %}">{{ post.author.username }} </a> on
+          {{ post.created_at }}</span
+        >
+      </div>
+      {% if request.user == post.author %} {% endif %}
+      <p>{{ post.content|truncatewords:30 }}</p>
+      <a href="{% url 'post_detail' pk=post.pk %}" class="bold">Read more</a>
+    </div>
+  </div>
 </div>
 {% endfor %} {% endblock %}
