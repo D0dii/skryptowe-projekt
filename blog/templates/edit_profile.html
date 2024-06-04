@@ -1,7 +1,7 @@
 {% extends "base_generic.html" %} {% block content %}
 <h2>Edit Profile</h2>
-<form method="post" enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data" class="basic-form edit-profile">
   {% csrf_token %} {{ user_form.as_p }} {{ profile_form.as_p }}
-  <button type="submit" class="btn btn-primary">Save changes</button>
+  <button type="submit" class="submit-btn btn-wide">Save changes</button>
 </form>
 {% endblock %}

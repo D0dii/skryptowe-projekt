@@ -10,10 +10,10 @@
     <header>
       <nav class="navbar">
         <div class="navbar-main">
-          <a href="{% url 'index' %}">Posting app</a>
           <a href="{% url 'index' %}">Home</a>
           {% if user.is_authenticated %}
-          <a href="{% url 'following_posts' %}">Following</a>
+          <a href="{% url 'following_posts' %}">Posts of Observed</a>
+          <a href="{% url 'following_list' %}">Observed Users</a>
           <a href="{% url 'post_new' %}">New Post</a>
           <a href="{% url 'profile' request.user.username %}">My Profile</a>
         </div>

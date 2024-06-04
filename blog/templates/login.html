@@ -1,6 +1,8 @@
+{% extends "account_generic.html" %} {% block content %}
 <h1>Login</h1>
-<form method="POST">
+<form method="POST" class="basic-form">
   {% csrf_token %} {{ form.as_p }}
-  <button type="submit">Login</button>
-  <a href="{% url 'signup' %}">Dont have Account Create</a>
+  <button type="submit" class="submit-btn">Login</button>
+  <a href="{% url 'signup' %}" class="mt-1">Create Account</a>
 </form>
+{% endblock %}

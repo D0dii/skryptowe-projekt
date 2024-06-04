@@ -8,6 +8,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout 
 from .forms import SignupForm, LoginForm, UserEditForm
 from django.db.models import Q
+import markdown
 
 def index(request):
     results = Post.objects.all().order_by('-created_at')
@@ -22,10 +23,14 @@ def index(request):
                 Q(author__username__icontains=query) |
                 Q(tags__icontains=query)
             )
+    
+    for post in results:
+        post.content_html = markdown.markdown(post.content)
     return render(request, 'index.html', {'form': form, 'query': query, 'results': results})
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
+    post.content_html = markdown.markdown(post.content)
     if request.method == 'POST':
         comment_form = CommentForm(request.POST)
         if comment_form.is_valid():
@@ -67,7 +72,7 @@ def post_edit(request, pk):
 
 @login_required
 def post_delete(request, pk):
-    post = get_object_or_404(Post, pk=pk)
+    post = get_object_or_404(Post, pk=pk) 
     post.delete()
     return redirect('index')
 
@@ -81,7 +86,6 @@ def add_like(request, pk):
     return redirect('post_detail', pk=pk)
 
 
-# signup page
 def user_signup(request):
     if request.user.is_authenticated:
         return redirect('index')
@@ -108,7 +112,6 @@ def edit_profile(request):
         profile_form = ProfileEditForm(instance=request.user.profile)
     return render(request, 'edit_profile.html', {'user_form': user_form, 'profile_form': profile_form})
 
-# login page
 def user_login(request):
     if request.user.is_authenticated:
         return redirect('index')
@@ -125,7 +128,6 @@ def user_login(request):
         form = LoginForm()
     return render(request, 'login.html', {'form': form})
 
-# logout page
 def user_logout(request):
     logout(request)
     return redirect('login')
@@ -163,6 +165,13 @@ def comment_edit(request, pk, comment_pk):
     return render(request, 'comment_edit.html', {'form': form})
 
 @login_required
+def delete_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    if request.user == comment.author or request.user.is_superuser:
+        comment.delete()
+    return redirect('post_detail', pk=comment.post.id)
+
+@login_required
 def following_posts(request):
     form = SearchForm()
     query = None
@@ -181,4 +190,12 @@ def following_posts(request):
                 Q(tags__icontains=query)
             )
 
+    for post in results:
+        post.content_html = markdown.markdown(post.content)
     return render(request, 'following_posts.html', {'form': form, 'query': query, 'results': results})
+
+@login_required
+def following_list(request):
+    current_user_profile = request.user.profile
+    following = current_user_profile.follows.all()
+    return render(request, 'following_users.html', {'following': following})

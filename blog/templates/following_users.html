@@ -1,0 +1,27 @@
+{% extends "base_generic.html" %} {% block title %}Observed{% endblock %} {% block content %}
+<h1>Observed</h1>
+{% if following %} {% for observed in following %}
+<a href="{% url 'profile' username=observed.user.username %}">
+  <div class="user-card mt-1">
+    {% if observed.user.profile.profile_picture %}
+    <img
+      src="/media/{{ observed.user.profile.profile_picture }}"
+      alt="Profile picture"
+      class="profile-picture img-small"
+    />
+    {% else %}
+    <img
+      src="/media/profile_pics/default-avatar.svg"
+      alt="Profile picture"
+      class="profile-picture img-small"
+    />
+    {% endif %}
+    <div class="flex-col">
+      <span class="bold font-big">{{ observed.user.username }}</span>
+      <span>{{ observed.user.profile.bio|truncatewords:15 }}</span>
+    </div>
+  </div>
+</a>
+{% endfor %} {% else %}
+<p>You are not following anyone yet.</p>
+{% endif %} {% endblock %}

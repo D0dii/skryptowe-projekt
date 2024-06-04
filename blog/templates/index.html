@@ -1,40 +1,77 @@
 {% extends "base_generic.html" %} {% block title %}All Posts{% endblock %} {% block content %}
 <h1>All Posts</h1>
 
-<!-- Search Form -->
 <div class="form-container">
   <form method="get" class="text-center">
     {{ form.as_p }}
     <button type="submit" class="submit-btn">Search</button>
   </form>
 
-  <!-- Search Results -->
   {% if query %}
   <h2>Results for "{{ query }}"</h2>
   <a href="{% url 'index' %}" class="submit-btn">Clear Filters</a>
   {% endif %}
 </div>
 
-<!-- Display Posts -->
 {% for post in results %}
 <div class="post-card">
   <div class="">
     <div class="post-header">
-      <h2 class="bold"><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a></h2>
+      <div class="flex w-100">
+        <a href="{% url 'profile' username=post.author.username %}">
+          {% if post.author.profile.profile_picture %}
+          <img
+            src="/media/{{ post.author.profile.profile_picture }}"
+            alt="Profile picture"
+            class="profile-picture img-small"
+          />
+          {% else %}
+          <img
+            src="/media/profile_pics/default-avatar.svg"
+            alt="Profile picture"
+            class="profile-picture img-small"
+          />
+          {% endif %}
+        </a>
+        <h2 class="bold"><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a></h2>
+      </div>
       {% if request.user == post.author %}
-      <a href="{% url 'post_edit' pk=post.pk %}"><i class="fa-solid fa-pencil" title="Edit post"></i></a>
-      {% endif %}
+      <div class="flex">
+        <a href="{% url 'post_edit' pk=post.pk %}"><i class="fa-solid fa-pencil" title="Edit post"></i></a>
+        <a href="{% url 'post_delete' pk=post.pk %}"><i class="fa-solid fa-trash" title="Delete post"></i></a>
+        <a href="{% url 'add_like' post.pk %}"
+          >{% if user in post.likes.all %}<i class="fa-solid fa-thumbs-up" title="Dislike"></i>{% else %}<i
+            class="fa-regular fa-thumbs-up"
+            title="Like"
+          ></i
+          >{% endif %}</a
+        >
+      </div>
+      {% else %} {% if user.is_authenticated %}
+      <p>
+        <a href="{% url 'add_like' post.pk %}"
+          >{% if user in post.likes.all %}<i class="fa-solid fa-thumbs-up" title="Dislike"></i>{% else %}<i
+            class="fa-regular fa-thumbs-up"
+            title="Like"
+          ></i
+          >{% endif %}</a
+        >
+      </p>
+      {% endif %} {% endif %}
     </div>
     <div>
       <div class="flex-col">
-        <span class="small">Tags: {{ post.tags }}</span>
         <span class="italic small"
           >By <a href="{% url 'profile' username=post.author.username %}">{{ post.author.username }} </a> on
           {{ post.created_at }}</span
         >
+        {% if post.tags %}
+        <span class="small">Tags: {{ post.tags }}</span>
+        {% endif %}
+        <span>{{ post.total_likes }} Like{{ post.total_likes|pluralize }}</span>
       </div>
 
-      <p>{{ post.content|truncatewords:30 }}</p>
+      <p>{{ post.content_html|safe|truncatewords:30 }}</p>
       <a href="{% url 'post_detail' pk=post.pk %}" class="bold">Read more</a>
     </div>
   </div>
