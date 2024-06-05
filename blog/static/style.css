@@ -232,7 +232,7 @@ input[type="email"] {
   border: none;
   margin-right: 0.5rem;
   width: 300px;
-  height: 50px;
+  height: 40px;
 }
 
 input[type="text"]:focus,
@@ -279,8 +279,16 @@ textarea:focus {
   gap: 0.5rem;
 }
 
-.basic-form.signup > p:nth-child(7) {
+.basic-form.signup-form > p:nth-child(7) {
   display: none;
+}
+
+.basic-form.signup-form > p {
+  padding-inline: 20%;
+}
+
+.basic-form.signup-form > ul {
+  padding-inline: 20%;
 }
 
 .basic-form > ul {
@@ -290,6 +298,15 @@ textarea:focus {
 
 .basic-form > ul > li {
   padding: 0;
+}
+
+.basic-form.edit-profile-form > p:nth-child(7) > input[type="checkbox"] {
+  align-self: baseline;
+  transform: scale(1.5);
+}
+
+.basic-form.edit-profile-form > p:nth-child(7) > br {
+  display: none;
 }
 
 .btn-wide {

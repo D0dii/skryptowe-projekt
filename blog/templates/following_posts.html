@@ -1,21 +1,25 @@
 {% extends "base_generic.html" %} {% block title %}All Posts{% endblock %} {% block content %}
 <h1>Posts of observed</h1>
 
-<!-- Search Form -->
 <div class="form-container">
   <form method="get" class="text-center">
     {{ form.as_p }}
     <button type="submit" class="submit-btn">Search</button>
   </form>
 
-  <!-- Search Results -->
   {% if query %}
   <h2>Results for "{{ query }}"</h2>
   <a href="{% url 'following_posts' %}" class="submit-btn">Clear Filters</a>
+  {% else %}
+  <div>
+    <a href="?sort=date" class="submit-btn">Sort by Date</a>
+    <a href="?sort=popularity" class="submit-btn">Sort by Popularity</a>
+    <a href="?sort=title" class="submit-btn">Sort by Title</a>
+    <a href="?sort=author" class="submit-btn">Sort by Author</a>
+  </div>
   {% endif %}
 </div>
 
-<!-- Display Posts -->
 {% for post in results %}
 <div class="post-card">
   <div class="">

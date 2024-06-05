@@ -10,6 +10,13 @@
   {% if query %}
   <h2>Results for "{{ query }}"</h2>
   <a href="{% url 'index' %}" class="submit-btn">Clear Filters</a>
+  {% else %}
+  <div>
+    <a href="?sort=date" class="submit-btn">Sort by Date</a>
+    <a href="?sort=popularity" class="submit-btn">Sort by Popularity</a>
+    <a href="?sort=title" class="submit-btn">Sort by Title</a>
+    <a href="?sort=author" class="submit-btn">Sort by Author</a>
+  </div>
   {% endif %}
 </div>
 

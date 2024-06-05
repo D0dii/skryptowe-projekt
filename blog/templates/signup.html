@@ -1,6 +1,6 @@
 {% extends "account_generic.html" %} {% block content %}
 <h1>Signup</h1>
-<form method="POST" class="basic-form signup">
+<form method="POST" class="basic-form signup-form">
   {% csrf_token %} {{ form.as_p }}
   <button type="submit" class="submit-btn">Signup</button>
   <a href="{% url 'login' %}" class="mt-1">Already have an account? Log in</a>

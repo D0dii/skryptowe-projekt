@@ -7,11 +7,22 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout 
 from .forms import SignupForm, LoginForm, UserEditForm
+from django.db.models import Count
 from django.db.models import Q
 import markdown
 
 def index(request):
-    results = Post.objects.all().order_by('-created_at')
+    sort_by = request.GET.get('sort', 'date')
+    
+    if sort_by == 'popularity':
+        results = Post.objects.annotate(total_likes=Count('likes')).order_by('-total_likes', '-created_at')
+    elif sort_by == 'author':
+        results = Post.objects.all().order_by('author__username', '-created_at')
+    elif sort_by == 'title':
+        results = Post.objects.all().order_by('title', '-created_at')
+    else:
+        results = Post.objects.all().order_by('-created_at')
+
     form = SearchForm()
     query = None
     if 'query' in request.GET:
@@ -178,7 +189,17 @@ def following_posts(request):
     user_profile = get_object_or_404(Profile, user=request.user)
     following_profiles = user_profile.follows.all()
     following_users = [profile.user for profile in following_profiles]
-    results = Post.objects.filter(author__in=following_users)
+    
+    sort_by = request.GET.get('sort', 'date')
+    
+    if sort_by == 'popularity':
+        results = Post.objects.filter(author__in=following_users).annotate(total_likes=Count('likes')).order_by('-total_likes', '-created_at')
+    elif sort_by == 'author':
+        results = Post.objects.filter(author__in=following_users).order_by('author__username', '-created_at')
+    elif sort_by == 'title':
+        results = Post.objects.filter(author__in=following_users).order_by('title', '-created_at')
+    else:
+        results = Post.objects.filter(author__in=following_users).order_by('-created_at')
 
     if 'query' in request.GET:
         form = SearchForm(request.GET)
