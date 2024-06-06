@@ -39,7 +39,7 @@
   <h2 class="mt-3">Followers</h2>
 
   {% for follower in followers %}
-  <a href="{% url 'profile' username=follower.user.username %}" class="w-50">
+  <a href="{% url 'profile' username=follower.user.username %}">
     <div class="user-card">
       {% if follower.user.profile.profile_picture %}
       <img
@@ -65,7 +65,7 @@
   <h2 class="mt-3">Observed</h2>
 
   {% for follow in follows %}
-  <a href="{% url 'profile' username=follow.user.username %}" class="w-50">
+  <a href="{% url 'profile' username=follow.user.username %}">
     <div class="user-card">
       {% if follow.user.profile.profile_picture %}
       <img

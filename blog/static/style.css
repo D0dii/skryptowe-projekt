@@ -360,6 +360,7 @@ textarea:focus {
   border-radius: 5px;
   background-color: var(--dark-secondary);
   width: 100%;
+  width: 500px;
 }
 
 .flex {
